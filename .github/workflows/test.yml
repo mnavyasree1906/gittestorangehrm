@@ -1,0 +1,41 @@
+name: CI Pipeline
+
+# Trigger the workflow on push and pull request events
+on:
+  push:
+    branches:
+      - main  # or your default branch
+  pull_request:
+    branches:
+      - main  # or your default branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Define the operating system where the job will run
+
+    steps:
+      # Checkout the code from the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up Java (adjust the version to match your JDK version)
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'  # Or any other version you're using
+          distribution: 'adoptopenjdk'  # Or any other distribution
+
+      # Build the project using Maven
+      - name: Build with Maven
+        run: mvn clean install
+
+      # Run the tests using Maven (this will run your TestNG tests)
+      - name: Run tests
+        run: mvn test
+
+      # Upload TestNG Reports (Optional)
+      - name: Upload TestNG Reports as artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: testng-reports
+          path: target/surefire-reports  # Path to your TestNG reports
