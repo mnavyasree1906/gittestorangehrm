@@ -1,0 +1,29 @@
+name: Run TestNG Tests
+
+on:
+  push:
+    branches:
+      - main  # Trigger the workflow on pushes to the main branch
+  pull_request:
+    branches:
+      - main  # Trigger the workflow on pull requests to the main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2  # Checkout the repository code
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2  # Set up JDK
+      with:
+        java-version: '17'  # You can specify a different version if needed
+        distribution: 'temurin'  # Use AdoptOpenJDK (or other distributions)
+
+    - name: Install dependencies
+      run: mvn clean install  # This installs the necessary dependencies using Maven
+
+    - name: Run TestNG tests
+      run: mvn test -DsuiteXmlFile=testng.xml  # This will run your TestNG suite file (testng.xml)
